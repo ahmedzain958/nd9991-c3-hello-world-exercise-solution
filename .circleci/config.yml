@@ -240,19 +240,24 @@ orbs:
   # aws-cli: circleci/aws-cli@2.0.3
 # Define the jobs we want to run for this project
 jobs:
-  create_infrastructure:  # Choose any name, such as `build`
-      # The primary container, where your job's commands will run
-      docker:
-        - image: amazon/aws-cli
-      steps:
-        - checkout # check out the code in the project directory
-        - run: 
-            name: Create Cloudformation Stack
-            command: |
-              aws cloudformation deploy \
-                --template-file template.yml \
-                --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
-                --region us-west-2
+  #   # Exercise: Config and Deployment
+  configure_infrastructure: 
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["93:88:81:d9:d8:8d:6b:90:01:57:67:a1:16:e8:6b:36"] # You can get this ID in the section where you registered the SSH Key
+      - run:
+          name: Install ansible
+          command: |
+            # install the dependencies needed for your playbook
+            apk add --update ansible 
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i inventory.txt main4.yml
+
 # Sequential workflow
 workflows:
   # Name the workflow
