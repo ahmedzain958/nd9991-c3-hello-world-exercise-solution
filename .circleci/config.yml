@@ -274,17 +274,6 @@ jobs:
           command: |
             ansible-playbook -i inventory.txt main4.yml
 
-  smoke_test:
-    docker:
-      - image: alpine:latest
-    steps:
-      - checkout
-      - run:
-        name: Test job
-        command: |
-          command:  return 1
-      - destroy_environment
-
 # Sequential workflow
 workflows:
   # Name the workflow
